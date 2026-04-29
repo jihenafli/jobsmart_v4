@@ -10,7 +10,8 @@
     "react-scripts": "^5.0.1"
   },
   "scripts": {
-    "start": "react-scripts start",
+ 
+    "start": "node server.js",
     "build": "node node_modules/react-scripts/bin/react-scripts.js build"
   },
   "proxy": "https://jobsmart-backend.railway.app",
