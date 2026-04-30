@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import axios from 'axios';
+import api from '../api';   
 import { useAuth } from '../hooks/useAuth';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
@@ -134,7 +134,7 @@ export default function Dashboard() {
     setCvLoading(true); setError('');
     const fd = new FormData(); fd.append('cv', file);
     try {
-      const res = await axios.post('/api/cv/upload', fd);
+      const res = await api.post('/api/cv/upload', fd);
       setCv(res.data);
     } catch (e) { setError(e.response?.data?.error || 'Erreur upload CV'); }
     finally { setCvLoading(false); }
@@ -156,7 +156,7 @@ export default function Dashboard() {
   const searchJobs = async () => {
     setJobsLoading(true); setError(''); setJobs([]);
     try {
-      const res = await axios.post('/api/jobs/search', { country, platforms: selectedSites });
+      const res = await api.post('/api/jobs/search', { country, platforms: selectedSites });
       if (res.data.jobs?.length === 0) {
         setError('Aucune offre trouvée. Vérifie que JSEARCH_API_KEY est bien configurée dans le .env du backend.');
       }
@@ -177,7 +177,7 @@ export default function Dashboard() {
     setRecipientEmail(job.companyEmail || '');
     setStep(3);
     try {
-      const res = await axios.post('/api/applications/generate', { job });
+      const res = await api.post('/api/applications/generate', { job });
       setLetter(res.data.coverLetter);
     } catch (e) { setError(e.response?.data?.error || 'Erreur génération lettre'); }
     finally { setLetterLoading(false); }
@@ -187,7 +187,7 @@ export default function Dashboard() {
   const sendApp = async () => {
     setSending(true); setError(''); setSendResult(null);
     try {
-      const res = await axios.post('/api/applications/send', { job: activeJob, coverLetter: letter, recipientEmail });
+      const res = await api.post('/api/applications/send', { job: activeJob, coverLetter: letter, recipientEmail });
       setSendResult(res.data);
       await refreshUser(); // mettre à jour le compteur
       // Si plus de crédit après envoi → afficher upgrade
@@ -203,7 +203,7 @@ export default function Dashboard() {
   /* ── Historique ── */
   const loadHistory = async () => {
     try {
-      const res = await axios.get('/api/applications');
+      const res = await api.get('/api/applications');
       setHistory(res.data); setStep(4);
     } catch { setError('Erreur chargement historique'); }
   };

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import api from '../api'; 
 import { useAuth } from '../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 
@@ -37,7 +37,7 @@ export default function Pricing() {
     if (!user) return navigate('/register');
     setLoading(planKey);
     try {
-      const res = await axios.post('/api/payments/create-checkout', { planKey });
+      const res = await api.post('/api/payments/create-checkout', { planKey });
       window.location.href = res.data.url;
     } catch (e) { alert('Erreur: ' + (e.response?.data?.error || e.message)); }
     finally { setLoading(''); }
